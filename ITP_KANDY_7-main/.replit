@@ -1,0 +1,25 @@
+# Use Node.js 20
+modules = ["nodejs-20"]
+
+# The command to run your server
+run = "cd backend && (fuser -k 3000/tcp 2>/dev/null || true) && npm install && npm start"
+
+# Tells Replit which port to watch
+[[ports]]
+localPort = 3000
+externalPort = 80
+
+[workflows]
+runButton = "Start Backend"
+
+[[workflows.workflow]]
+name = "Start Backend"
+author = "user"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "cd backend && (fuser -k 3000/tcp 2>/dev/null || true) && npm install && npm start"
+waitForPort = 3000
+
+[agent]
+expertMode = true

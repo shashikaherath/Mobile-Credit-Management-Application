@@ -1,0 +1,118 @@
+name: Full-Stack CI
+
+on:
+  push:
+    branches:
+      - Beta
+      - main
+    tags:
+      - 'v*'
+    paths:
+      - 'backend/**'
+      - 'frontend/**'
+      - '.replit'
+      - '.github/workflows/**'
+  pull_request:
+    branches:
+      - Beta
+      - main
+    paths:
+      - 'backend/**'
+      - 'frontend/**'
+      - '.replit'
+      - '.github/workflows/**'
+
+jobs:
+  backend-qa:
+    name: Backend Quality Check
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./backend
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Create Dummy Firebase Key
+        run: |
+          echo '${{ secrets.FIREBASE_ADMIN_KEY }}' > serviceAccountKey.json
+
+      - name: Create Backend Environment File
+        run: |
+          echo "${{ secrets.BACKEND_ENV }}" > .env
+
+      - name: Install Dependencies
+        run: npm install
+
+      - name: Run Linter
+        run: npm run lint
+        continue-on-error: true # Don't block the build for styling issues, but show them.
+
+      - name: Run Tests
+        run: npm test
+
+  frontend-build:
+    name: Frontend Android Build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    needs: backend-qa # Only build the App if the Backend tests pass (optional but recommended)
+    defaults:
+      run:
+        working-directory: ./frontend
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+
+      - name: Inject Firebase Configuration
+        run: |
+          echo '${{ secrets.GOOGLE_SERVICES_JSON }}' > android/app/google-services.json
+
+      - name: Install Dependencies
+        run: flutter pub get
+
+      - name: Build APK
+        run: flutter build apk --release --build-number=${{ github.run_number }}
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: clickbuy-app-v${{ github.run_number }}
+          path: frontend/build/app/outputs/flutter-apk/app-release.apk
+
+      - name: Create or Update GitHub Release
+        if: github.event_name == 'push' && (startsWith(github.ref, 'refs/tags/v') || github.ref == 'refs/heads/main' || github.ref == 'refs/heads/Beta')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: frontend/build/app/outputs/flutter-apk/app-release.apk
+          tag_name: ${{ startsWith(github.ref, 'refs/tags/v') && github.ref_name || (github.ref == 'refs/heads/main' && 'stable-latest' || 'beta-latest') }}
+          name: ${{ startsWith(github.ref, 'refs/tags/v') && github.ref_name || (github.ref == 'refs/heads/main' && 'Latest Stable Build' || 'Beta Development Build') }}
+          body: |
+            Automated Build for ${{ github.ref_name }}
+            
+            **Branch/Tag:** ${{ github.ref_name }}
+            **Build Number:** ${{ github.run_number }}
+            **Date:** ${{ github.event.head_commit.timestamp }}
+          draft: false
+          prerelease: ${{ github.ref == 'refs/heads/Beta' }}
+          make_latest: ${{ github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/v') }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

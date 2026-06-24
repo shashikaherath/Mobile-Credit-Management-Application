@@ -1,0 +1,151 @@
+# ============================================
+# Main Root .gitignore for ClickBuy
+# (Consolidated Flutter frontend + Node.js backend)
+# ============================================
+
+# ===================== OS Files =====================
+.DS_Store
+Thumbs.db
+desktop.ini
+*.swp
+*.swo
+*~
+
+# ==================== IDEs/Editors ====================
+# IntelliJ / Android Studio
+.idea/
+*.iml
+*.ipr
+*.iws
+
+# VS Code
+.vscode/
+
+# Sublime Text
+*.sublime-project
+*.sublime-workspace
+
+# ==================== Node.js (Backend) ====================
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.env
+.env.local
+.env.*.local
+.npm
+.eslintcache
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# ==================== Firebase Credentials (CRITICAL) ====================
+# Never push your service account key to GitHub!
+serviceAccountKey.json
+**/serviceAccountKey.json
+
+# ==================== Flutter (Frontend) ====================
+# Dart/Flutter generated
+**/doc/api/
+**/ios/Flutter/.last_build_id
+.dart_tool/
+.metadata
+# pubspec.lock (Removed from ignore to ensure version consistency)
+.flutter-plugins
+.flutter-plugins-dependencies
+.pub-cache/
+.pub/
+build/
+/build/
+coverage/
+/coverage/
+.packages
+
+# Symbolication related
+app.*.symbols
+
+# Obfuscation related
+app.*.map.json
+
+# Android build artifacts
+**/android/app/debug
+**/android/app/profile
+**/android/app/release
+**/android/.gradle/
+**/android/captures/
+**/android/gradlew
+**/android/gradlew.bat
+**/android/local.properties
+**/android/**/GeneratedPluginRegistrant.java
+**/android/.cxx/
+key.properties
+**/*.keystore
+**/*.jks
+
+# iOS
+**/ios/Pods/
+**/ios/.symlinks/
+**/ios/Flutter/Flutter.framework
+**/ios/Flutter/Flutter.podspec
+**/ios/Flutter/Generated.xcconfig
+**/ios/Flutter/ephemeral/
+**/ios/Flutter/app.flx
+**/ios/Flutter/app.zip
+**/ios/Flutter/flutter_assets/
+**/ios/ServiceDefinitions.json
+**/ios/Runner/GeneratedPluginRegistrant.*
+
+# Web
+**/web/favicon.png
+
+# ==================== Misc ====================
+**/*.log
+*.class
+*.pyc
+.atom/
+.build/
+.buildlog/
+.history
+.svn/
+.swiftpm/
+migrate_working_dir/
+TROUBLESHOOTING.md
+tmp/
+walkthrough.md
+task.md
+implementation_plan.md
+
+# Diagnostic & Audit Reports
+*.txt
+*.csv
+*.txt.bak
+!README.md
+!system_improvements.md
+!bugs_and_fixes.md
+
+# Local Scratch Folders
+scratch/
+**/scratch/
+
+# Assignment Reference Materials
+IT2150_Assignment_5.pdf
+assignment_text.txt
+Final_Project_Report/ClickBuy_Final_Report.md
+
+# Firebase / Google Services
+google-services.json
+**/android/app/google-services.json
+GoogleService-Info.plist
+**/ios/Runner/GoogleService-Info.plist
+
+# Private keys / Certificates / Secrets
+*.keystore
+*.jks
+*.p12
+*.pem
+key.properties
+local.properties
+.env
+.env.*
+!.env.example

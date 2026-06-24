@@ -1,0 +1,31 @@
+{
+  "name": "shopbook-backend",
+  "version": "1.0.0",
+  "description": "ShopBook Grocery Shop Manager Backend API",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "nodemon src/server.js",
+    "kill-port": "fuser -k 3000/tcp 2>/dev/null || true",
+    "lint": "eslint src/**",
+    "test": "jest --testTimeout=20000"
+  },
+  "dependencies": {
+    "archiver": "^7.0.1",
+    "bcryptjs": "^2.4.3",
+    "cors": "^2.8.5",
+    "dotenv": "^17.3.1",
+    "express": "^4.21.0",
+    "firebase-admin": "^13.0.0",
+    "jsonwebtoken": "^9.0.3",
+    "mongodb": "^7.1.1",
+    "mongoose": "^9.3.3",
+    "nodemailer": "^8.0.5",
+    "uuid": "^9.0.0"
+  },
+  "devDependencies": {
+    "eslint": "^8.57.0",
+    "jest": "^30.3.0",
+    "nodemon": "^3.1.14"
+  }
+}
